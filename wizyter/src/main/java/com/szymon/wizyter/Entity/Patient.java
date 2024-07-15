@@ -2,10 +2,9 @@ package com.szymon.wizyter.Entity;
 
 import jakarta.persistence.*;
 
-
 @Entity
-@Table(name = "doctors")
-public class Doctor {
+@Table(name = "patients")
+public class Patient {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +16,14 @@ public class Doctor {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @ManyToOne
-    @JoinColumn(name = "specialty_id", nullable = false)
-    private Specialty specialty;
+    @Column(name = "pesel", nullable = false, unique = true)
+    private Long pesel;
+
+    @Column(name = "phone_number")
+    private Long phoneNumber;
+
+    @Column(name = "email")
+    private String email;
 
     public Long getId() {
         return id;
@@ -45,11 +49,27 @@ public class Doctor {
         this.lastName = lastName;
     }
 
-    public Specialty getSpecialty() {
-        return specialty;
+    public Long getPesel() {
+        return pesel;
     }
 
-    public void setSpecialty(Specialty specialty) {
-        this.specialty = specialty;
+    public void setPesel(Long pesel) {
+        this.pesel = pesel;
+    }
+
+    public Long getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(Long phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

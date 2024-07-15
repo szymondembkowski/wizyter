@@ -2,6 +2,8 @@ package com.szymon.wizyter.Entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "appointments")
 public class Appointment {
@@ -10,28 +12,16 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
+    @ManyToOne
+    @JoinColumn(name = "patient_id", nullable = false)
+    private Patient patient;
 
-    private String lastName;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", nullable = false)
+    private Doctor doctor;
 
-    @Column(name = "pesel", nullable = false, unique = true, length = 11)
-    private int pesel;
-
-    private int phoneNumber;
-
-    private String email;
-
-    public Appointment() {
-    }
-
-    public Appointment(Long id, String firstName, String lastName, int pesel, int phoneNumber, String email) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.pesel = pesel;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-    }
+    @Column(name = "appointment_date", nullable = false)
+    private LocalDateTime appointmentDate;
 
     public Long getId() {
         return id;
@@ -41,43 +31,27 @@ public class Appointment {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Patient getPatient() {
+        return patient;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 
-    public String getLastName() {
-        return lastName;
+    public Doctor getDoctor() {
+        return doctor;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
     }
 
-    public int getPesel() {
-        return pesel;
+    public LocalDateTime getAppointmentDate() {
+        return appointmentDate;
     }
 
-    public void setPesel(int pesel) {
-        this.pesel = pesel;
-    }
-
-    public int getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(int phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setAppointmentDate(LocalDateTime appointmentDate) {
+        this.appointmentDate = appointmentDate;
     }
 }
