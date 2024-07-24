@@ -18,7 +18,7 @@ public class Doctor {
     private String lastName;
 
     @ManyToOne
-    @JoinColumn(name = "specialty_id", nullable = false)
+    @JoinColumn(name = "specialty", nullable = false)
     private Specialty specialty;
 
     public Long getId() {

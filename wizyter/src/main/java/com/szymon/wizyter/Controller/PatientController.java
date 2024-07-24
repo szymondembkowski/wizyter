@@ -18,7 +18,6 @@ public class PatientController {
 
     private static final Logger logger = LoggerFactory.getLogger(PatientController.class);
 
-
     @Autowired
     private PatientService patientService;
 
@@ -29,7 +28,6 @@ public class PatientController {
 
     @PostMapping("/patients")
     public ResponseEntity<?> createPatient(@RequestBody Patient patient) {
-        logger.info("Received request to create patient: {}", patient);
         Patient savedPatient = patientService.createPatient(patient);
         return ResponseEntity.ok(savedPatient);
     }

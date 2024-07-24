@@ -1,54 +1,73 @@
 package com.szymon.wizyter.Controller;
 
 import com.szymon.wizyter.Entity.Appointment;
-import com.szymon.wizyter.Services.AppointmentService;
+import com.szymon.wizyter.Entity.Doctor;
+import com.szymon.wizyter.Entity.Patient;
+import com.szymon.wizyter.Repository.AppointmentRepository;
+import com.szymon.wizyter.Repository.DoctorRepository;
+import com.szymon.wizyter.Repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/appointments")
 public class AppointmentController {
 
     @Autowired
-    private AppointmentService appointmentService;
+    private AppointmentRepository appointmentRepository;
 
-    @GetMapping
-    public List<Appointment> getAllAppointments() {
-        return appointmentService.getAllAppointments();
-    }
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Appointment createAppointment(@RequestBody Appointment appointment) {
-        return appointmentService.createAppointment(appointment);
+    public ResponseEntity<Appointment> createAppointment(@RequestBody AppointmentRequest appointmentRequest) {
+        Patient patient = patientRepository.findById(appointmentRequest.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+        Doctor doctor = doctorRepository.findById(appointmentRequest.getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        Appointment appointment = new Appointment();
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
+        appointment.setAppointmentDate(appointmentRequest.getAppointmentDate());
+
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        return ResponseEntity.ok(savedAppointment);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
-        Optional<Appointment> appointment = appointmentService.getAppointmentById(id);
-        return appointment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    public static class AppointmentRequest {
+        private Long patientId;
+        private Long doctorId;
+        private LocalDateTime appointmentDate;
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Appointment> updateAppointment(@PathVariable Long id, @RequestBody Appointment appointmentDetails) {
-        Optional<Appointment> updatedAppointment = appointmentService.updateAppointment(id, appointmentDetails);
-        return updatedAppointment.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+        public Long getPatientId() {
+            return patientId;
+        }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
-        Optional<Appointment> appointment = appointmentService.getAppointmentById(id);
-        if (appointment.isPresent()) {
-            appointmentService.deleteAppointment(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
+        public void setPatientId(Long patientId) {
+            this.patientId = patientId;
+        }
+
+        public Long getDoctorId() {
+            return doctorId;
+        }
+
+        public void setDoctorId(Long doctorId) {
+            this.doctorId = doctorId;
+        }
+
+        public LocalDateTime getAppointmentDate() {
+            return appointmentDate;
+        }
+
+        public void setAppointmentDate(LocalDateTime appointmentDate) {
+            this.appointmentDate = appointmentDate;
         }
     }
 }
