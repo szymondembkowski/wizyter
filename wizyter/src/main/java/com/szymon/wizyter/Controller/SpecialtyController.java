@@ -14,14 +14,11 @@ import org.slf4j.LoggerFactory;
 @RequestMapping("/api/specialties")
 public class SpecialtyController {
 
-    private static final Logger logger = LoggerFactory.getLogger(SpecialtyController.class);
-
     @Autowired
     private SpecialtyRepository specialtyRepository;
 
     @PostMapping
     public ResponseEntity<Specialty> createSpecialty(@RequestBody Specialty specialty) {
-        logger.info("Received request to create specialty: {}", specialty);
         Specialty savedSpecialty = specialtyRepository.save(specialty);
         return ResponseEntity.ok(savedSpecialty);
     }
