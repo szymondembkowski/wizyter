@@ -1,9 +1,12 @@
 package com.szymon.wizyter.Entity;
 
 import jakarta.persistence.*;
+import jdk.jfr.DataAmount;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "appointments")
 public class Appointment {
@@ -22,6 +25,16 @@ public class Appointment {
 
     @Column(name = "appointment_date", nullable = false)
     private LocalDateTime appointmentDate;
+
+    public Appointment() {
+    }
+
+    public Appointment(Long id, Patient patient, Doctor doctor, LocalDateTime appointmentDate) {
+        this.id = id;
+        this.patient = patient;
+        this.doctor = doctor;
+        this.appointmentDate = appointmentDate;
+    }
 
     public Long getId() {
         return id;

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/patients")
 public class PatientController {
 
     private static final Logger logger = LoggerFactory.getLogger(PatientController.class);
@@ -47,9 +47,8 @@ public class PatientController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
-        Optional<Patient> patient = patientService.getPatientById(id);
-        if (patient.isPresent()) {
-            patientService.deletePatient(id);
+        boolean deleted = patientService.deletePatientIfExists(id);
+        if (deleted) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

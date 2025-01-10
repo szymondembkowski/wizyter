@@ -1,9 +1,8 @@
 package com.szymon.wizyter.Controller;
 
 import com.szymon.wizyter.Entity.Doctor;
-import com.szymon.wizyter.Repository.DoctorRepository;
+import com.szymon.wizyter.Services.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,46 +12,30 @@ import java.util.List;
 public class DoctorController {
 
     @Autowired
-    private DoctorRepository doctorRepository;
+    private DoctorService doctorService;
 
     @PostMapping
-    public ResponseEntity<Doctor> createDoctor(@RequestBody Doctor doctor) {
-        Doctor savedDoctor = doctorRepository.save(doctor);
-        return ResponseEntity.ok(savedDoctor);
+    public Doctor createDoctor(@RequestBody Doctor doctor) {
+        return doctorService.createDoctor(doctor);
     }
 
     @GetMapping
-    public ResponseEntity<List<Doctor>> getAllDoctors() {
-        List<Doctor> doctors = doctorRepository.findAll();
-        return ResponseEntity.ok(doctors);
+    public List<Doctor> getAllDoctors() {
+        return doctorService.getAllDoctors();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Doctor> getDoctorById(@PathVariable Long id) {
-        Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
-        return ResponseEntity.ok(doctor);
+    public Doctor getDoctorById(@PathVariable Long id) {
+        return doctorService.getDoctorById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Doctor> updateDoctor(@PathVariable Long id, @RequestBody Doctor doctorDetails) {
-        Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
-
-        doctor.setFirstName(doctorDetails.getFirstName());
-        doctor.setLastName(doctorDetails.getLastName());
-        doctor.setSpecialty(doctorDetails.getSpecialty());
-
-        Doctor updatedDoctor = doctorRepository.save(doctor);
-        return ResponseEntity.ok(updatedDoctor);
+    public Doctor updateDoctor(@PathVariable Long id, @RequestBody Doctor doctorDetails) {
+        return doctorService.updateDoctor(id, doctorDetails);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
-        Doctor doctor = doctorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Doctor not found"));
-
-        doctorRepository.delete(doctor);
-        return ResponseEntity.noContent().build();
+    public void deleteDoctor(@PathVariable Long id) {
+        doctorService.deleteDoctor(id);
     }
 }

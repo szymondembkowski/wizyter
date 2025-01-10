@@ -21,6 +21,10 @@ public class Doctor {
     @JoinColumn(name = "specialty", nullable = false)
     private Specialty specialty;
 
+    public Doctor() {
+
+    }
+
     public Long getId() {
         return id;
     }

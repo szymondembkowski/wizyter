@@ -1,10 +1,15 @@
 package com.szymon.wizyter.Services;
 
+import com.szymon.wizyter.Controller.AppointmentController;
 import com.szymon.wizyter.Entity.Appointment;
+import com.szymon.wizyter.Entity.Doctor;
+import com.szymon.wizyter.Entity.Patient;
 import com.szymon.wizyter.Repository.AppointmentRepository;
+import com.szymon.wizyter.Repository.DoctorRepository;
+import com.szymon.wizyter.Repository.PatientRepository;
+import com.szymon.wizyter.Requests.AppointmentRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,15 +20,29 @@ public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
+
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
     }
 
-    public Optional<Appointment> getAppointmentById(Long id) {
-        return appointmentRepository.findById(id);
-    }
+    public Appointment createAppointment(AppointmentRequest appointmentRequest) {
 
-    public Appointment createAppointment(Appointment appointment) {
+        Patient patient = patientRepository.findById(appointmentRequest.getPatientId())
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        Doctor doctor = doctorRepository.findById(appointmentRequest.getDoctorId())
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        Appointment appointment = new Appointment();
+        appointment.setPatient(patient);
+        appointment.setDoctor(doctor);
+        appointment.setAppointmentDate(appointmentRequest.getAppointmentDate());
+
         return appointmentRepository.save(appointment);
     }
 

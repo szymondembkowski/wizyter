@@ -39,7 +39,12 @@ public class PatientService {
         });
     }
 
-    public void deletePatient(Long id) {
-        patientRepository.deleteById(id);
+    public boolean deletePatientIfExists(Long id) {
+        if (patientRepository.existsById(id)) {
+            patientRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
+
 }
