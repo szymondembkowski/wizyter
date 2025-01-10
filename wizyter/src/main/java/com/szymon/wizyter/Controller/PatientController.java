@@ -16,8 +16,6 @@ import java.util.Optional;
 @RequestMapping("/api/patients")
 public class PatientController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PatientController.class);
-
     @Autowired
     private PatientService patientService;
 

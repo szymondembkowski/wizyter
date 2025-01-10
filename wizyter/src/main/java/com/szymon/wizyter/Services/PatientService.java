@@ -28,6 +28,7 @@ public class PatientService {
         return patientRepository.save(patient);
     }
 
+    @Transactional
     public Optional<Patient> updatePatient(Long id, Patient patientDetails) {
         return patientRepository.findById(id).map(patient -> {
             patient.setFirstName(patientDetails.getFirstName());
